@@ -14,11 +14,19 @@ ctx.webkitImageSmoothingEnabled = false;
 window.onload = function () {
 	bedroom.draw();
 	cat.draw();
+	cat.move();
 	requestAnimationFrame(window.onload);
 }
 
+var buttonsAllowed = [];
+buttonsAllowed[32]= true;
+buttonsAllowed[37]= true;
+buttonsAllowed[38]= true;
+buttonsAllowed[39]= true;
+buttonsAllowed[40]= true;
+
 document.addEventListener('keydown', function (e) {
-    if (e.keyCode > 36 && e.keyCode < 41) {
+    if (e.keyCode in buttonsAllowed) {
     	cat.move(e.keyCode);
 	};
 });
