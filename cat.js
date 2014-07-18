@@ -6,76 +6,126 @@ var tick = 0;
 var cat = {
 	x: 350,
 	y: 350,
-	dx: 5,
+	speed: 5,
+	friction: 0.7,
+	velX: 0,
+	velY: 0,
+	leapTopSpeed: 6,
+	leapDeltaV: 0,
 	width: 37,
 	height: 31,
 	walkFrame: 0,
-	jumping: false,
 	falling: false,
-	timesMoved: 0,
+	jumping: false,
+	yJumpLoc: null,
 	facing: "left"
 }
 
-cat.move = function(button) {
-	tick++;
-	if(!cat.jumping){
-		if(!cat.falling){
-			switch(button){
-				case 37: //left
-					cat.facing = "left";
-					cat.x -= cat.dx;
-					if (tick % 3 === 0){
-						cat.walkFrame++;
-						if (cat.walkFrame > 5) {
-							cat.walkFrame = 0;
-						};
-					}
-				break;
-
-				case 39: //right
-					cat.facing = "right";
-					cat.x += cat.dx;
-					if (tick % 3 === 0){
-						cat.walkFrame++;
-						if (cat.walkFrame < 6 || cat.walkFrame > 11) {
-							cat.walkFrame = 6;
-						}
-					}    	
-				break;
-
-				case 38: //up
-					cat.y -= cat.dx;
-				break;
-
-				case 40: //down
-					cat.y +=cat.dx;
-				break;
-
-				case 32: //spacebar
-					cat.jumping = true;
-					if (cat.facing === "left"){
-						cat.walkFrame = 12;
-					}
-					else{
-						cat.walkFrame = 15;
-					}
-					cat.timesMoved = 0;
-				break;
-
-				default:
-					//nothing
-				break;
+cat.move = function() {
+	tick++; //for sprite changing
+	//keyboard events
+	if(keys[37]){
+		cat.facing = "left";
+		if(cat.velX > -cat.speed){
+			cat.velX--;
+		}
+		if (tick % 3 === 0){
+			if(!cat.jumping && !cat.falling){
+				cat.walkFrame++;
+				if (cat.walkFrame > 5) {
+					cat.walkFrame = 0;
+				}
 			}
 		}
-		else{
-			cat.fall();
+	}
+	if(keys[39]){
+		cat.facing = "right";
+		if(cat.velX < cat.speed){
+			cat.velX++;
+		}
+		if (tick % 3 === 0){
+			if(!cat.jumping && !cat.falling){
+				cat.walkFrame++;
+				if (cat.walkFrame < 6 || cat.walkFrame > 11) {
+					cat.walkFrame = 6;
+				}
+			}
+		}
+	}    	
+	if(!cat.jumping && !cat.falling){
+		if(keys[38]){ //up
+			if(cat.velY > -cat.speed){
+				cat.velY--;
+			}
+		}
+		if(keys[40]){ //down
+			if(cat.velY < cat.speed){
+				cat.velY++;
+			}
+			if (tick % 3 === 0){
+				cat.walkFrame = cat.walkFrame === 16 ? 17 : 16;
+			}
+		}
+
+		if(keys[32]){ //spacebar
+			if(!cat.jumping){
+				cat.jumping = true;
+				cat.yJumpLoc = cat.y;
+			}
+			if (cat.facing === "left"){
+				cat.walkFrame = 12;
+			}
+			else{
+				cat.walkFrame = 15;
+			}
 		}
 	}
+	
+	//the actual movement animation
+	cat.velX *= cat.friction;
+	cat.velY *= cat.friction;
+
+	if(cat.jumping){
+		if(cat.leapDeltaV < cat.leapTopSpeed){
+			cat.leapDeltaV++;
+		}
+		else{
+			cat.jumping = false;
+			cat.falling = true;
+		}
+
+	}
+	else if(cat.y < cat.yJumpLoc){
+		cat.leapDeltaV--;
+	}
 	else{
-		cat.jump();
+		cat.yJumpLoc = null;
+		cat.leapDeltaV = 0;
+		cat.falling = false;
+	}
+	//console.log(cat.leapDeltaV, cat.y, cat.yJumpLoc);
+	cat.x += cat.velX;
+	cat.y += cat.velY; 
+	cat.y -= cat.leapDeltaV;
+
+	//border collisions
+	if(cat.x > width - cat.width){
+		cat.x = width - cat.width;
+	}
+	else if(cat.x < 0){
+		cat.x = 0;
+	}
+	if (cat.y < house.topMold.height+house.wall.height+house.wallpaper.height - cat.height){
+		cat.y = house.topMold.height+house.wall.height+house.wallpaper.height - cat.height;
+	}
+	else if (cat.y > height - cat.height) {
+		cat.y = height - cat.height;
 	}
 }
 
+
+/*******
+old jump/fall animations
 cat.jump = function() {
 	if (cat.timesMoved < 5){
 		if(tick % 3 === 0){
@@ -121,6 +171,7 @@ cat.fall = function() {
 	}
 	
 }
+******/
 
 cat.draw = function() {
 	ctx.drawImage(catImage,
@@ -145,3 +196,5 @@ catSprite[12] = {x: 7, y: 67};	//jump left
 catSprite[13] = {x: 51, y: 67}; //fall left
 catSprite[14] = {x: 5, y: 143}; //fall right
 catSprite[15] = {x: 49, y: 141}; //jump right
+catSprite[16] = {x: 91, y: 141}; //down
+catSprite[17] = {x: 130, y: 141}; //down2

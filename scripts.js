@@ -18,15 +18,12 @@ window.onload = function () {
 	requestAnimationFrame(window.onload);
 }
 
-var buttonsAllowed = [];
-buttonsAllowed[32]= true;
-buttonsAllowed[37]= true;
-buttonsAllowed[38]= true;
-buttonsAllowed[39]= true;
-buttonsAllowed[40]= true;
+var keys = [];
 
 document.addEventListener('keydown', function (e) {
-    if (e.keyCode in buttonsAllowed) {
-    	cat.move(e.keyCode);
-	};
+	keys[e.keyCode] = true;
+});
+
+document.addEventListener("keyup", function(e) {
+    keys[e.keyCode] = false;
 });
