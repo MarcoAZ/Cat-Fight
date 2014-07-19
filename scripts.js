@@ -13,12 +13,13 @@ ctx.webkitImageSmoothingEnabled = false;
 
 window.onload = function () {
 	bedroom.draw();
+	cat.move();
 	cat.draw();
 	requestAnimationFrame(window.onload);
 }
 
 document.addEventListener('keydown', function (e) {
-    if (e.keyCode > 36 && e.keyCode < 41) {
+    //if (e.keyCode > 31 && e.keyCode < 41) {
     	cat.move(e.keyCode);
-	};
+	//};
 });
