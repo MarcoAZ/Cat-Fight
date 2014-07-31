@@ -1,5 +1,5 @@
 var sprite = new Image();
-sprite.src = "castle_2.png";
+sprite.src = "../assets/castle_2.png";
 
 var house = {
 	topMold: {spriteX: 1, spriteY: 43, width: 94, height: 21,
