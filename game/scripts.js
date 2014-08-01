@@ -3,6 +3,7 @@
 //dog in the bed room, vacuum in living room, rat in kitchen, house plant in a family room.
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
@@ -23,7 +24,6 @@ window.onload = function () {
 	menu.src = "../assets/catMenu.png";
 	menu.onload = function() {
 		ctx.drawImage(menu,0,0,width,height,0,0,width,height);
-		console.log("onload");
 	};
 }
 
@@ -31,13 +31,11 @@ var menuExit = function() {
 	var menuDone = false;
 	var c = 0;
 	var j = 0;
-	//first row
+
 	var interval = setInterval(function() { 
 		ctx.drawImage(menu,c,j,width,height,0,0,width,height); 
 		c += 400;
-		console.log("interval 1");
 		if(c >= 2000){
-			// clearInterval(interval);
 			c = 0;
 			j += 400;
 		}
@@ -45,7 +43,6 @@ var menuExit = function() {
 			clearInterval(interval);
 			menuDone = true;
 		}
-		console.log(menuDone);
 		if(menuDone){
 			gameLoop();
 		}
@@ -55,6 +52,8 @@ var menuExit = function() {
 var gameLoop = function() {
 	bedroom.draw();
 	cat.draw();
+	dog.draw();
+	dog.AI();
 	cat.move();
 	requestAnimationFrame(gameLoop);
 };
@@ -72,7 +71,6 @@ document.addEventListener("keyup", function(e) {
 canvas.addEventListener("click", function(e){
 	if(!started){
 		started = true;
-		console.log("clicked");
 		menuExit();
 	}
 });

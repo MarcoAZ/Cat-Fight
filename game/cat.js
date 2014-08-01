@@ -6,7 +6,7 @@ var tick = 0;
 var cat = {
 	x: 350,
 	y: 350,
-	speed: 7,
+	speed: 5,
 	friction: 0.78,
 	velX: 0,
 	velY: 0,
