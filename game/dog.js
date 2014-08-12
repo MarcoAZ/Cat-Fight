@@ -5,6 +5,7 @@ dogSprites.src = "../assets/dog.png";
 // create the dog object with:
 // 	health
 var dog = {
+	name: "Dog",
 	width: 70,
 	height: 60,
 	x: 30,
@@ -17,7 +18,8 @@ var dog = {
 	yFrame: null,
 	yLastFrame: null,
 	lastFrame: null,
-	chasing: false
+	chasing: false,
+	health: 100
 }
 
 // function that takes current cat.x and cat.y
@@ -37,12 +39,12 @@ dog.chaseInit = function(catX, catY) {
 	if (targetY < 0) {
 		var yStartFrame = 18;
 		dog.yFrame = yStartFrame;
-		dog.yLastFrame = 26;
+		dog.yLastFrame = 25;
 	}
 	else{
-		var yStartFrame = 27;
+		var yStartFrame = 26;
 		dog.yFrame = yStartFrame;
-		dog.yLastFrame = 35;
+		dog.yLastFrame = 34;
 	}
 
 	return {
@@ -74,7 +76,7 @@ dog.chase = function(catX, catY) {
 	else{
 		dog.velX *= dog.friction;
 		dog.velY *= dog.friction;
-//TO DO, CHECK FOR NEGATIVES SO THE DOG CAN RUN IN VELX VELY NEGATIVE VALUES
+
 		if(tX > 0){
 			if(dog.velX < dog.speed){
 				dog.velX++;
@@ -130,6 +132,20 @@ dog.AI = function(){
 	if (wait % 100 === 0 && !dog.chasing) {
 		dog.chase(cat.x, cat.y);
 	}
+
+	//border collisions
+	if(dog.x > width - cat.width){
+		dog.x = width - cat.width;
+	}
+	else if(dog.x < 0){
+		dog.x = 0;
+	}
+	if (dog.y < house.topMold.height+house.wall.height+house.wallpaper.height - cat.height){
+		dog.y = house.topMold.height+house.wall.height+house.wallpaper.height - cat.height;
+	}
+	else if (dog.y > height - cat.height) {
+		dog.y = height - cat.height;
+	}
 };
 
 //dog idle function with appro anims
@@ -139,6 +155,7 @@ dog.draw = function() {
 	ctx.drawImage(dogSprites,
 		dogAnim[dog.currFrame].x, dogAnim[dog.currFrame].y, dog.width, dog.height,
 		dog.x, dog.y, dog.width, dog.height);
+	healthBar(dog.name, dog.health, 280, 35);
 };
 
 // an array with each sprite frame
@@ -169,13 +186,13 @@ dogAnim[22] = {x: 280, y: 120};
 dogAnim[23] = {x: 350, y: 120};
 dogAnim[24] = {x: 420, y: 120};
 dogAnim[25] = {x: 490, y: 120};
-dogAnim[26] = {x: 560, y: 120};
-dogAnim[27] = {x: 0, y: 180}; //down
-dogAnim[28] = {x: 70, y: 180};
-dogAnim[29] = {x: 140, y: 180};
-dogAnim[30] = {x: 210, y: 180};
-dogAnim[31] = {x: 280, y: 180};
-dogAnim[32] = {x: 350, y: 180};
-dogAnim[33] = {x: 420, y: 180};
-dogAnim[34] = {x: 490, y: 180};
-dogAnim[35] = {x: 560, y: 180};
+dogAnim[26] = {x: 0, y: 180}; //down
+dogAnim[27] = {x: 70, y: 180};
+dogAnim[28] = {x: 140, y: 180};
+dogAnim[29] = {x: 210, y: 180};
+dogAnim[30] = {x: 280, y: 180};
+dogAnim[31] = {x: 350, y: 180};
+dogAnim[32] = {x: 420, y: 180};
+dogAnim[33] = {x: 490, y: 180};
+dogAnim[34] = {x: 560, y: 180};
+

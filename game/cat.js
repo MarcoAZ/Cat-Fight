@@ -4,6 +4,7 @@ catArrowImg.src = "../assets/catSprites.png";
 var tick = 0;
 
 var cat = {
+	name: "Cat",
 	x: 350,
 	y: 350,
 	speed: 5,
@@ -13,7 +14,8 @@ var cat = {
 	width: 40,
 	height: 40,
 	walkFrame: 0,
-	wasFacing: "left" //leftover from old jumping animation but might be necessary for attack anim
+	wasFacing: "left", //leftover from old jumping animation but might be necessary for attack anim
+	health: 100
 }
 
 cat.move = function() {
@@ -93,10 +95,23 @@ cat.move = function() {
 	}
 }
 
+var healthBar = function(name, health, x, y){
+	var rectWidth = health;
+	var rectHeight = 10;
+	ctx.fillStyle = "red";
+	ctx.fillRect(x, y, rectWidth, rectHeight);
+	ctx.strokeRect(x, y, 100, rectHeight);
+	ctx.fillStyle = "black";
+	ctx.font = "10pt Lucida Console";
+	ctx.fillText(name, x, y-4);
+}
+
 cat.draw = function() {
 	ctx.drawImage(catArrowImg,
 		catSprite[cat.walkFrame].x, catSprite[cat.walkFrame].y, cat.width, cat.height,
 		cat.x, cat.y, cat.width, cat.height);
+	
+	healthBar(cat.name, cat.health, 10, 35);
 }
 
 //each holds a sprite location
