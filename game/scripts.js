@@ -54,6 +54,7 @@ var gameLoop = function() {
 	cat.draw();
 	dog.draw();
 	dog.AI();
+	collisionCheck();
 	cat.move();
 	requestAnimationFrame(gameLoop);
 };
@@ -74,3 +75,30 @@ canvas.addEventListener("click", function(e){
 		menuExit();
 	}
 });
+
+var collisionCheck = function() {
+	var vectorX = (cat.x + (cat.width/2)) - (dog.x + (dog.width/2));
+	var vectorY = (cat.y + (cat.height/2)) - (dog.y + (dog.height/2));
+
+	var halfWidths = (cat.width/2) + (dog.width/2);
+	var halfHeights = (cat.height/2) + (dog.height/2);
+
+	if (Math.abs(vectorX) < halfWidths && Math.abs(vectorY) < halfHeights) {
+		damageHealth(cat, 0.5);
+	};
+};
+
+var damageHealth = function(character, amountOfDamage) {
+	if (character.health >  0) {
+		character.health -= amountOfDamage;
+	}
+
+	healthCheck(character);
+};
+
+var healthCheck = function(character) {
+	if(character.health <= 0){
+		console.log(character.name + " = dead");
+		//return character.death = true????
+	}
+};

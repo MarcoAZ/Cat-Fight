@@ -56,11 +56,11 @@ var house = {
 }
 
 var bedroom = {
-	bed: {spriteX: 96, spriteY: 224, width: 64, height: 96,
+	rug: {spriteX: 0, spriteY: 128, width: 96, height: 96,
 		draw: function() {
 			ctx.drawImage(sprite,
-				bedroom.bed.spriteX, bedroom.bed.spriteY, bedroom.bed.width, bedroom.bed.height,
-				175, house.topMold.height + house.wallpaper.height + 30, bedroom.bed.width, bedroom.bed.height);
+				bedroom.rug.spriteX, bedroom.rug.spriteY, bedroom.rug.width, bedroom.rug.height,
+				110, house.topMold.height + house.wallpaper.height + 100, bedroom.rug.width*2, bedroom.rug.height*2);
 		}
 	},
 
@@ -75,6 +75,6 @@ var bedroom = {
 	draw: function() {
 		house.draw();
 		bedroom.painting.draw();
-		bedroom.bed.draw();
+		bedroom.rug.draw();
 	}
 }

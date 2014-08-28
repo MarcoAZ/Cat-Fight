@@ -2,8 +2,6 @@
 var dogSprites = new Image();
 dogSprites.src = "../assets/dog.png";
 
-// create the dog object with:
-// 	health
 var dog = {
 	name: "Dog",
 	width: 70,
@@ -18,11 +16,10 @@ var dog = {
 	yFrame: null,
 	yLastFrame: null,
 	lastFrame: null,
-	chasing: false,
+	canChase: true,
 	health: 100
 }
 
-// function that takes current cat.x and cat.y
 dog.chaseInit = function(catX, catY) {
 	var targetX = catX - dog.x;
 	var targetY = catY - dog.y;
@@ -44,7 +41,7 @@ dog.chaseInit = function(catX, catY) {
 	else{
 		var yStartFrame = 26;
 		dog.yFrame = yStartFrame;
-		dog.yLastFrame = 34;
+		dog.yLastFrame = 33;
 	}
 
 	return {
@@ -61,16 +58,19 @@ var	startFrame, yStartFrame;
 var cX, cY;
 var tX, tY;
 
+var startRestTime;
+
 dog.chase = function(catX, catY) {
-	if(!dog.chasing){
+	if(dog.canChase){
+		dog.canChase = false;
 		chaseData = dog.chaseInit(catX, catY);
 		startFrame = chaseData.startFrame;
 		yStartFrame = chaseData.yStartFrame;
-		dog.chasing = true;
 		cX = catX;
 		cY = catY;
 		tX = chaseData.targetX;
 		tY = chaseData.targetY;
+
 		requestAnimationFrame(dog.chase);
 	}
 	else{
@@ -122,14 +122,48 @@ dog.chase = function(catX, catY) {
 		else{
 			dog.currFrame = startFrame;
 			cancelAnimationFrame(dog.chase);
-			dog.chasing = false;
+
+			if (dog.tiredFromChasing() ) {
+				startRestTime = Date.now();
+				dog.rest();
+			}
+			else{
+				dog.canChase = true;
+			}
 		}
 	}
 };
+
+var timesChased = 0;
+dog.tiredFromChasing = function() {
+	timesChased++;
+	if (timesChased % 5 == 0) {
+		return true;
+	}
+	else{
+		return false;
+	}
+};
+
+dog.rest = function() {
+	var currentTime = Date.now();
+	var timePassedInSeconds = (currentTime - startRestTime)/1000;
+
+	if (timePassedInSeconds < 4) {
+		requestAnimationFrame(dog.rest);
+	}
+	else{
+		dog.canChase = true;
+		//later will replace with bark() attack which sets this var to true.
+	}
+	
+};
+
+
 var wait = -1;
 dog.AI = function(){
 	wait++;
-	if (wait % 100 === 0 && !dog.chasing) {
+	if (wait % 100 === 0 && dog.canChase) {
 		dog.chase(cat.x, cat.y);
 	}
 
@@ -147,8 +181,6 @@ dog.AI = function(){
 		dog.y = height - cat.height;
 	}
 };
-
-//dog idle function with appro anims
 
 // a drawing function
 dog.draw = function() {
@@ -194,5 +226,4 @@ dogAnim[30] = {x: 280, y: 180};
 dogAnim[31] = {x: 350, y: 180};
 dogAnim[32] = {x: 420, y: 180};
 dogAnim[33] = {x: 490, y: 180};
-dogAnim[34] = {x: 560, y: 180};
 

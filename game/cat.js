@@ -14,7 +14,6 @@ var cat = {
 	width: 40,
 	height: 40,
 	walkFrame: 0,
-	wasFacing: "left", //leftover from old jumping animation but might be necessary for attack anim
 	health: 100
 }
 
@@ -23,7 +22,6 @@ cat.move = function() {
 	//keyboard events
 	//to enable diagonal movements, remove "else" in "else if" statements
 	if(keys[37]){
-		cat.wasFacing = "left";
 		if(cat.velX > -cat.speed){
 			cat.velX--;
 		}
@@ -35,7 +33,6 @@ cat.move = function() {
 		}
 	}
 	else if(keys[39]){
-		cat.wasFacing = "right";
 		if(cat.velX < cat.speed){
 			cat.velX++;
 		}
