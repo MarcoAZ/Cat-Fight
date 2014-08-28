@@ -16,6 +16,7 @@ var dog = {
 	yFrame: null,
 	yLastFrame: null,
 	lastFrame: null,
+	idleFrame: null,
 	canChase: true,
 	health: 100
 }
@@ -27,11 +28,13 @@ dog.chaseInit = function(catX, catY) {
 		var startFrame = 0;
 		dog.currFrame = startFrame;
 		dog.lastFrame = 8;
+		dog.idleFrame = 34;
 	}
 	else{
 		var startFrame = 9;
 		dog.currFrame = startFrame;
 		dog.lastFrame = 17;
+		dog.idleFrame = 35;
 	}
 	if (targetY < 0) {
 		var yStartFrame = 18;
@@ -120,7 +123,7 @@ dog.chase = function(catX, catY) {
 			requestAnimationFrame(dog.chase);
 		}
 		else{
-			dog.currFrame = startFrame;
+			dog.currFrame = dog.idleFrame;
 			cancelAnimationFrame(dog.chase);
 
 			if (dog.tiredFromChasing() ) {
@@ -226,4 +229,5 @@ dogAnim[30] = {x: 280, y: 180};
 dogAnim[31] = {x: 350, y: 180};
 dogAnim[32] = {x: 420, y: 180};
 dogAnim[33] = {x: 490, y: 180};
-
+dogAnim[34] = {x: 560, y: 120}; //idle right
+dogAnim[35] = {x: 560, y: 180}; //idle left
